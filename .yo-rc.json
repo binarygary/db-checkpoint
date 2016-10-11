@@ -1,0 +1,18 @@
+{
+  "generator-plugin-wp": {
+    "name": "DB CheckPoint",
+    "homepage": "https://www.binarygary.com/",
+    "description": "Extends WP-CLI to include a db checkpoint for development purposes.",
+    "version": "0.1.0",
+    "author": "Gary Kovar",
+    "authoremail": "plugins@binarygary.com",
+    "authorurl": "https://www.binarygary.com/",
+    "license": "GPLv2",
+    "slug": "db-checkpoint",
+    "classname": "DB_CheckPoint",
+    "classprefix": "DBCP_",
+    "prefix": "db_checkpoint",
+    "year": 2016,
+    "currentVersionWP": "4.6.1"
+  }
+}

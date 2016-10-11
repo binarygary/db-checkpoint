@@ -1,0 +1,27 @@
+{
+	"name": "db-checkpoint",
+	"title": "DB CheckPoint",
+	"version": "0.1.0",
+	"description": "Extends WP-CLI to include a db checkpoint for development purposes.",
+	"author": {
+		"name": "Gary Kovar",
+		"url": "https://www.binarygary.com/"
+	},
+	"license": "GPLv2",
+	"devDependencies": {
+		"grunt": "latest",
+		"grunt-contrib-watch": "latest",
+		"grunt-wp-i18n": "latest",
+		"grunt-contrib-copy": "latest",
+		"grunt-text-replace": "latest",
+		"grunt-contrib-clean": "latest",
+		"grunt-contrib-compress": "latest",
+		"grunt-wp-deploy": "latest",
+		"load-grunt-tasks": "latest"
+	},
+	"scripts": {
+		"test": "dockunit",
+		"preversion": "npm test",
+		"version": "grunt version && git add ."
+	}
+}
