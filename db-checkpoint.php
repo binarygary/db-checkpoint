@@ -346,8 +346,8 @@ final class DB_CheckPoint {
 	}
 
 	public function load_commands() {
-		WP_CLI::add_command( 'checkpoint', array( $this->cli, 'db_checkpoint' ) );
-//		WP_CLI::add_command( 'checkpoint', $this->cli->db_checkpoint() );
+		WP_CLI::add_command( 'checkpoint save', array( $this->cli, 'checkpoint_save' ) );
+		WP_CLI::add_command( 'checkpoint restore', array( $this->cli, 'checkpoint_restore' ) );
 	}
 
 }

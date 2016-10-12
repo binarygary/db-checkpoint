@@ -32,17 +32,6 @@ class DBCP_Cli {
 	 */
 	public function __construct( $plugin ) {
 		$this->plugin = $plugin;
-		$this->hooks();
-	}
-
-	/**
-	 * Initiate our hooks
-	 *
-	 * @since  NEXT
-	 * @return void
-	 */
-	public function hooks() {
-		add_action( 'plugins_loaded', array( $this, 'load_commands' ) );
 	}
 
 	/**
@@ -68,7 +57,17 @@ class DBCP_Cli {
 	 *
 	 * @when before_wp_load
 	 */
-	public function db_checkpoint() {
-		echo "test successful";
+	public function checkpoint_save($args) {
+
+		error_log($args);
+
+		$db = new DB_Command;
+		$db->export();
+
+		WP_CLI::success( "Checkpoint Saved!" );
+	}
+
+	public function checkpoint_restore() {
+
 	}
 }
