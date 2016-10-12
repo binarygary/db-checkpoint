@@ -11,7 +11,7 @@
  * Text Domain: db-checkpoint
  * Domain Path: /languages
  *
- * @link https://www.binarygary.com/
+ * @link    https://www.binarygary.com/
  *
  * @package DB CheckPoint
  * @version 0.1.0
@@ -44,7 +44,9 @@
  * Autoloads files with classes when needed
  *
  * @since  NEXT
+ *
  * @param  string $class_name Name of the class being requested.
+ *
  * @return void
  */
 function db_checkpoint_autoload_classes( $class_name ) {
@@ -59,6 +61,7 @@ function db_checkpoint_autoload_classes( $class_name ) {
 
 	DB_CheckPoint::include_file( 'includes/class-' . $filename );
 }
+
 spl_autoload_register( 'db_checkpoint_autoload_classes' );
 
 /**
@@ -184,7 +187,8 @@ final class DB_CheckPoint {
 	 * @since  NEXT
 	 * @return void
 	 */
-	public function _deactivate() {}
+	public function _deactivate() {
+	}
 
 	/**
 	 * Init hooks
@@ -197,6 +201,7 @@ final class DB_CheckPoint {
 			load_plugin_textdomain( 'db-checkpoint', false, dirname( $this->basename ) . '/languages/' );
 			$this->plugin_classes();
 		}
+		$this->load_commands();
 	}
 
 	/**
@@ -217,6 +222,10 @@ final class DB_CheckPoint {
 
 			return false;
 		}
+
+//		if ( !defined( 'WP_CLI' ) && !WP_CLI ) {
+//			return false;
+//		}
 
 		return true;
 	}
@@ -266,7 +275,9 @@ final class DB_CheckPoint {
 	 * Magic getter for our object.
 	 *
 	 * @since  NEXT
+	 *
 	 * @param string $field Field to get.
+	 *
 	 * @throws Exception Throws an exception if the field is invalid.
 	 * @return mixed
 	 */
@@ -288,7 +299,9 @@ final class DB_CheckPoint {
 	 * Include a file from the includes directory
 	 *
 	 * @since  NEXT
+	 *
 	 * @param  string $filename Name of the file to be included.
+	 *
 	 * @return bool   Result of include call.
 	 */
 	public static function include_file( $filename ) {
@@ -296,6 +309,7 @@ final class DB_CheckPoint {
 		if ( file_exists( $file ) ) {
 			return include_once( $file );
 		}
+
 		return false;
 	}
 
@@ -303,12 +317,15 @@ final class DB_CheckPoint {
 	 * This plugin's directory
 	 *
 	 * @since  NEXT
+	 *
 	 * @param  string $path (optional) appended path.
+	 *
 	 * @return string       Directory and path
 	 */
 	public static function dir( $path = '' ) {
 		static $dir;
 		$dir = $dir ? $dir : trailingslashit( dirname( __FILE__ ) );
+
 		return $dir . $path;
 	}
 
@@ -316,14 +333,23 @@ final class DB_CheckPoint {
 	 * This plugin's url
 	 *
 	 * @since  NEXT
+	 *
 	 * @param  string $path (optional) appended path.
+	 *
 	 * @return string       URL and path
 	 */
 	public static function url( $path = '' ) {
 		static $url;
 		$url = $url ? $url : trailingslashit( plugin_dir_url( __FILE__ ) );
+
 		return $url . $path;
 	}
+
+	public function load_commands() {
+		WP_CLI::add_command( 'checkpoint', array( $this->cli, 'db_checkpoint' ) );
+//		WP_CLI::add_command( 'checkpoint', $this->cli->db_checkpoint() );
+	}
+
 }
 
 /**
