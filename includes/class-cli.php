@@ -48,9 +48,11 @@ class DBCP_Cli {
 	 */
 	public function checkpoint_save( $args ) {
 
+		$snapshot_name = $this->get_snapshot_name( $args );
+
 		$upload_dir = wp_upload_dir();
 
-		$location  = $upload_dir[ 'basedir' ] . '/checkpoint-storage/' . time() . '.' . $args[ 0 ] . '.sql';
+		$location  = $upload_dir[ 'basedir' ] . '/checkpoint-storage/' . time() . '.' . $snapshot_name . '.sql';
 		$args[ 0 ] = $location;
 
 		$db = new DB_Command;
@@ -73,12 +75,14 @@ class DBCP_Cli {
 	 */
 	public function checkpoint_restore( $args ) {
 
+		$snapshot_name = $this->get_snapshot_name( $args );
+
 		$upload_dir = wp_upload_dir();
 
-		if ($restore_file = $this->get_most_recent_file( $args[ 0 ] )){
-			$location = $upload_dir[ 'basedir' ] . '/checkpoint-storage/' . $this->get_most_recent_file( $args[ 0 ] );
+		if ( $restore_file = $this->get_most_recent_file( $snapshot_name ) ) {
+			$location = $upload_dir[ 'basedir' ] . '/checkpoint-storage/' . $this->get_most_recent_file( $snapshot_name );
 		} else {
-			WP_CLI::error( 'No checkpoint found associated with ' . $args[0] );
+			WP_CLI::error( 'No checkpoint found associated with ' . $snapshot_name );
 		}
 
 		$args[ 0 ] = $location;
@@ -87,6 +91,32 @@ class DBCP_Cli {
 		$db->import( $args, null );
 
 		WP_CLI::success( "Checkpoint Restored!" );
+	}
+
+	/**
+	 * Lists checkpoints of the db.
+	 *
+	 * ## OPTIONS
+	 *
+	 * <name>
+	 * : The name of the checkpoint to list.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     wp checkpoint list something-risky
+	 */
+	public function checkpoint_list( $args ) {
+
+		$snapshot_name = $this->get_snapshot_name( $args );
+
+		$upload_dir = wp_upload_dir();
+
+		$backupsdir = scandir( $upload_dir[ 'basedir' ] . '/checkpoint-storage/', SCANDIR_SORT_DESCENDING );
+		foreach ( $backupsdir as $backup ) {
+			if ( strpos( $backup, $snapshot_name ) !== false ) {
+				WP_CLI::line( $backup );
+			}
+		}
 	}
 
 	public function get_most_recent_file( $backup_name ) {
@@ -100,6 +130,15 @@ class DBCP_Cli {
 				return $backup;
 			}
 		}
+
 		return false;
+	}
+
+	public function get_snapshot_name( $args ) {
+		if ( is_array( $args ) ) {
+			return $args[ 0 ];
+		}
+
+		return sanitize_title( get_option( 'blogname', 'shruggy' ) );
 	}
 }

@@ -351,7 +351,6 @@ final class DB_CheckPoint {
 	}
 
 	public function load_commands() {
-		WP_CLI::add_command( 'snapshot', array( $this->cli, 'snapshot' ) );
 		WP_CLI::add_command( 'snapshot set', array( $this->cli, 'checkpoint_save' ) );
 		WP_CLI::add_command( 'snapshot get', array( $this->cli, 'checkpoint_restore' ) );
 		WP_CLI::add_command( 'snapshot list', array( $this->cli, 'checkpoint_list' ) );
