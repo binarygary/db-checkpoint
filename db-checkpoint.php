@@ -1,19 +1,19 @@
 <?php
 /**
- * Plugin Name: DB CheckPoint
+ * Plugin Name: DB Snapshot
  * Plugin URI:  https://www.binarygary.com/
- * Description: Extends WP-CLI to include a db checkpoint for development purposes.
+ * Description: Extends WP-CLI to include a db snapshot for development purposes.
  * Version:     0.1.0
  * Author:      Gary Kovar
  * Author URI:  https://www.binarygary.com/
  * Donate link: https://www.binarygary.com/
  * License:     GPLv2
- * Text Domain: db-checkpoint
+ * Text Domain: db-snapshot
  * Domain Path: /languages
  *
  * @link    https://www.binarygary.com/
  *
- * @package DB CheckPoint
+ * @package DB Snapshot
  * @version 0.1.0
  */
 
@@ -200,8 +200,8 @@ final class DB_CheckPoint {
 		if ( $this->check_requirements() ) {
 			load_plugin_textdomain( 'db-checkpoint', false, dirname( $this->basename ) . '/languages/' );
 			$this->plugin_classes();
+			$this->load_commands();
 		}
-		$this->load_commands();
 	}
 
 	/**
@@ -228,9 +228,9 @@ final class DB_CheckPoint {
 			mkdir( $upload_dir[ 'basedir' ] . '/checkpoint-storage' );
 		}
 
-//		if ( !defined( 'WP_CLI' ) && !WP_CLI ) {
-//			return false;
-//		}
+		if ( !defined( 'WP_CLI' )) {
+			return false;
+		}
 
 		return true;
 	}
@@ -351,8 +351,10 @@ final class DB_CheckPoint {
 	}
 
 	public function load_commands() {
-		WP_CLI::add_command( 'checkpoint set', array( $this->cli, 'checkpoint_save' ) );
-		WP_CLI::add_command( 'checkpoint get', array( $this->cli, 'checkpoint_restore' ) );
+		WP_CLI::add_command( 'snapshot', array( $this->cli, 'snapshot' ) );
+		WP_CLI::add_command( 'snapshot set', array( $this->cli, 'checkpoint_save' ) );
+		WP_CLI::add_command( 'snapshot get', array( $this->cli, 'checkpoint_restore' ) );
+		WP_CLI::add_command( 'snapshot list', array( $this->cli, 'checkpoint_list' ) );
 	}
 
 }

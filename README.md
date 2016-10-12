@@ -1,4 +1,4 @@
-# DB CheckPoint #
+# DB Snapshot #
 **Contributors:**      Gary Kovar  
 **Donate link:**       https://www.binarygary.com/  
 **Tags:**  
