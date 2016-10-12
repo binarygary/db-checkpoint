@@ -35,27 +35,16 @@ class DBCP_Cli {
 	}
 
 	/**
-	 * Prints a greeting.
+	 * Saves a checkpoint of the db.
 	 *
 	 * ## OPTIONS
 	 *
 	 * <name>
-	 * : The name of the person to greet.
-	 *
-	 * [--type=<type>]
-	 * : Whether or not to greet the person with success or error.
-	 * ---
-	 * default: success
-	 * options:
-	 *   - success
-	 *   - error
-	 * ---
+	 * : The name of the checkpoint.
 	 *
 	 * ## EXAMPLES
 	 *
-	 *     wp example hello Newman
-	 *
-	 * @when before_wp_load
+	 *     wp checkpoint set something-risky
 	 */
 	public function checkpoint_save( $args ) {
 
@@ -70,6 +59,18 @@ class DBCP_Cli {
 		WP_CLI::success( "Checkpoint Saved!" );
 	}
 
+	/**
+	 * Restores the most recent checkpoint of the db with given name.
+	 *
+	 * ## OPTIONS
+	 *
+	 * <name>
+	 * : The name of the checkpoint.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     wp checkpoint get something-risky
+	 */
 	public function checkpoint_restore( $args ) {
 
 		$upload_dir = wp_upload_dir();
@@ -89,6 +90,9 @@ class DBCP_Cli {
 	}
 
 	public function get_most_recent_file( $backup_name ) {
+
+		//@TODO Use something better than substr (tem will restore temp)
+
 		$upload_dir = wp_upload_dir();
 		$backupsdir = scandir( $upload_dir[ 'basedir' ] . '/checkpoint-storage/', SCANDIR_SORT_DESCENDING );
 		foreach ( $backupsdir as $backup ) {
