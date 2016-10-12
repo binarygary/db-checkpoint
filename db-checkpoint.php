@@ -223,6 +223,11 @@ final class DB_CheckPoint {
 			return false;
 		}
 
+		$upload_dir = wp_upload_dir();
+		if ( ! file_exists( $upload_dir[ 'basedir' ] . '/checkpoint-storage' ) ) {
+			mkdir( $upload_dir[ 'basedir' ] . '/checkpoint-storage' );
+		}
+
 //		if ( !defined( 'WP_CLI' ) && !WP_CLI ) {
 //			return false;
 //		}
