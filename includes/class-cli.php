@@ -59,13 +59,9 @@ class DBCP_Cli {
 	 */
 	public function checkpoint_save( $args ) {
 
-		error_log( print_r( $args, true ) );
-
 		$upload_dir = wp_upload_dir();
 
 		$location = $upload_dir['basedir'].'/checkpoint-storage/' . time() . '.' . $args[0] . '.sql';
-
-		//error_log($location);
 
 		$db = new DB_Command;
 		$db->export( $location, null );
