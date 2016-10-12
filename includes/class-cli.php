@@ -107,6 +107,8 @@ class DBCP_Cli {
 	 */
 	public function checkpoint_list( $args ) {
 
+		//@TODO change WP_CLI::line to be more informative.
+
 		$snapshot_name = $this->get_snapshot_name( $args );
 
 		$upload_dir = wp_upload_dir();
