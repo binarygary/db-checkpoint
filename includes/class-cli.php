@@ -39,15 +39,17 @@ class DBCP_Cli {
 	 *
 	 * @author Gary Kovar
 	 *
-	 * @since 0.1.0
+	 * @since  0.1.0
 	 */
 	public function checkpoint_save( $args ) {
 
 		$snapshot_name = $this->get_snapshot_name( $args );
 
+		$this->maybe_nuke_checkpoints( $snapshot_name );
+
 		$upload_dir = wp_upload_dir();
 
-		$location  = $upload_dir[ 'basedir' ] . '/checkpoint-storage/' . time() . '.' . $snapshot_name . '.sql';
+		$location  = $upload_dir[ 'basedir' ] . '/checkpoint-storage/' . $snapshot_name . '.' . $this->human_timestamp() . '.sql';
 		$args[ 0 ] = $location;
 
 		$db = new DB_Command;
@@ -61,7 +63,7 @@ class DBCP_Cli {
 	 *
 	 * @author Gary Kovar
 	 *
-	 * @since 0.1.0
+	 * @since  0.1.0
 	 */
 	public function checkpoint_restore( $args ) {
 
@@ -84,54 +86,11 @@ class DBCP_Cli {
 	}
 
 	/**
-	 * Lists checkpoints of the db.
-	 *
-	 * ## OPTIONS
-	 *
-	 * <name>
-	 * : The name of the checkpoint to list.
-	 *
-	 * ## EXAMPLES
-	 *
-	 *     wp checkpoint list something-risky
-	 */
-	public function checkpoint_list( $args ) {
-
-		//@TODO change WP_CLI::line to be more informative.
-
-		$snapshot_name = $this->get_snapshot_name( $args );
-
-		$upload_dir = wp_upload_dir();
-
-		$backupsdir = scandir( $upload_dir[ 'basedir' ] . '/checkpoint-storage/', SCANDIR_SORT_DESCENDING );
-		foreach ( $backupsdir as $backup ) {
-			if ( strpos( $backup, $snapshot_name ) !== false ) {
-				WP_CLI::line( $backup );
-			}
-		}
-	}
-
-	public function get_most_recent_file( $backup_name ) {
-
-		//@TODO Use something better than substr (tem will restore temp)
-
-		$upload_dir = wp_upload_dir();
-		$backupsdir = scandir( $upload_dir[ 'basedir' ] . '/checkpoint-storage/', SCANDIR_SORT_DESCENDING );
-		foreach ( $backupsdir as $backup ) {
-			if ( strpos( $backup, $backup_name ) !== false ) {
-				return $backup;
-			}
-		}
-
-		return false;
-	}
-
-	/**
 	 * Figure out what name to use with this file.
 	 *
 	 * @author Gary Kovar
 	 *
-	 * @since 0.1.0
+	 * @since  0.1.0
 	 *
 	 * @param $args
 	 *
@@ -144,5 +103,52 @@ class DBCP_Cli {
 		}
 
 		return sanitize_title( get_option( 'blogname', 'shruggy' ) );
+	}
+
+	/**
+	 * Check to see if the checkpoint name matches the site name, if so remove any checkpoints of the same name.
+	 *
+	 * @author Gary Kovar
+	 *
+	 * @since 0.1.0
+	 *
+	 * @param $checkpoint_name
+	 */
+	public function maybe_nuke_checkpoints( $checkpoint_name ) {
+		if ($checkpoint_name == $this->get_snapshot_name(null)) {
+			$this->nuke_checkpoints( $checkpoint_name );
+		}
+	}
+
+	/**
+	 * Deletes all previous checkpoints under the same name.
+	 *
+	 * @author Gary Kovar
+	 *
+	 * @since 0.1.0
+	 *
+	 * @param $checkpoint_name
+	 */
+	public function nuke_checkpoints( $checkpoint_name ) {
+		$upload_dir = wp_upload_dir();
+		$backupsdir = scandir( $upload_dir[ 'basedir' ] . '/checkpoint-storage/', SCANDIR_SORT_DESCENDING );
+		foreach ( $backupsdir as $backup ) {
+			if(strpos($backup, $checkpoint_name)===0) {
+				unlink($upload_dir['basedir'].'/checkpoint-storage/'.$backup);
+			}
+		}
+	}
+
+	/**
+	 * Return a pretty human readable time.
+	 *
+	 * @author Gary Kovar
+	 *
+	 * @since  0.1.0
+	 *
+	 * @return false|string
+	 */
+	public function human_timestamp() {
+		return date( "Ymd-Hi", time() );
 	}
 }
