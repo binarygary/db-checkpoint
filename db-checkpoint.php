@@ -19,7 +19,7 @@ spl_autoload_register( 'db_checkpoint_autoload_classes' );
  *
  * @since  NEXT
  */
-final class DB_CheckPoint {
+final class DB_CheckPoint extends WP_CLI_COMMAND {
 
 	/**
 	 * Current version
