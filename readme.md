@@ -1,4 +1,4 @@
-# wp-cli-buddypress
+# wp-cli db-checkpoint
 
 WP-CLI command for quick db snapshots. Currently supported commands:
 
