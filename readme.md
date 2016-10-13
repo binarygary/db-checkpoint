@@ -18,7 +18,7 @@ Because I haven't built it yet. I'm filling in commands as I need them, which me
 ## Setup
 
 * Install [wp-cli](https://wp-cli.org)
-* Install wp-cli-buddypress. Manuall installation is recommended, though Composer installation should work too. See https://github.com/wp-cli/wp-cli/wiki/Community-Packages for information. 
+* Install this package with this command: `wp package install binarygary/db-checkpoint`
 * Inside of a WP installation, type `wp`. You should see a list of available commands.
 
 ## Changelog
