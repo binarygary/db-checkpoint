@@ -36,6 +36,10 @@ class DBCP_Cli {
 
 	/**
 	 * Saves a checkpoint of the db.
+	 *
+	 * @author Gary Kovar
+	 *
+	 * @since 0.1.0
 	 */
 	public function checkpoint_save( $args ) {
 
@@ -54,6 +58,10 @@ class DBCP_Cli {
 
 	/**
 	 * Restores the most recent checkpoint of the db.
+	 *
+	 * @author Gary Kovar
+	 *
+	 * @since 0.1.0
 	 */
 	public function checkpoint_restore( $args ) {
 
@@ -118,6 +126,17 @@ class DBCP_Cli {
 		return false;
 	}
 
+	/**
+	 * Figure out what name to use with this file.
+	 *
+	 * @author Gary Kovar
+	 *
+	 * @since 0.1.0
+	 *
+	 * @param $args
+	 *
+	 * @return string
+	 */
 	public function get_snapshot_name( $args ) {
 
 		if ( key_exists( 0, $args ) ) {
