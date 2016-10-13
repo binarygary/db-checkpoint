@@ -9,8 +9,8 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 		}
 
 		public function load_commands() {
-			WP_CLI::add_command( 'dbsnap', $this - checkpoint_save(), $this->get_checkpoint_save_args() );
-			WP_CLI::add_command( 'dbsnapback', $this->checkpoint_restore(), $this->get_checkpoint_restore_args() );
+			WP_CLI::add_command( 'dbsnap', array ($this, 'checkpoint_save' ), $this->get_checkpoint_save_args() );
+			WP_CLI::add_command( 'dbsnapback', array( $this, 'checkpoint_restore' ), $this->get_checkpoint_restore_args() );
 		}
 
 
