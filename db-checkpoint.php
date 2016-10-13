@@ -351,9 +351,39 @@ final class DB_CheckPoint {
 	}
 
 	public function load_commands() {
-		WP_CLI::add_command( 'snapshot set', array( $this->cli, 'checkpoint_save' ) );
-		WP_CLI::add_command( 'snapshot get', array( $this->cli, 'checkpoint_restore' ) );
-		WP_CLI::add_command( 'snapshot list', array( $this->cli, 'checkpoint_list' ) );
+		WP_CLI::add_command( 'dbsnap', array( $this->cli, 'checkpoint_save' ) , $this->get_checkpoint_save_args() );
+		WP_CLI::add_command( 'dbsnapback', array( $this->cli, 'checkpoint_restore' ), $this->get_checkpoint_restore_args() );
+	}
+
+	public function get_checkpoint_save_args() {
+		return array(
+			'shortdesc' => 'Restores the checkpoint image of the database.',
+			'synopsis' => array(
+				array(
+					'type'     => 'positional',
+					'name'     => 'name',
+					'optional' => true,
+					'multiple' => false,
+				),
+			),
+			'when' => 'before_wp_load',
+		);
+	}
+
+
+	public function get_checkpoint_restore_args() {
+		return array(
+			'shortdesc' => 'Creates a simple checkpoint image of the database.',
+			'synopsis' => array(
+				array(
+					'type'     => 'positional',
+					'name'     => 'name',
+					'optional' => true,
+					'multiple' => false,
+				),
+			),
+			'when' => 'before_wp_load',
+		);
 	}
 
 }

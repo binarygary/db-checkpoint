@@ -36,15 +36,6 @@ class DBCP_Cli {
 
 	/**
 	 * Saves a checkpoint of the db.
-	 *
-	 * ## OPTIONS
-	 *
-	 * <name>
-	 * : The name of the checkpoint.
-	 *
-	 * ## EXAMPLES
-	 *
-	 *     wp checkpoint set something-risky
 	 */
 	public function checkpoint_save( $args ) {
 
@@ -62,16 +53,7 @@ class DBCP_Cli {
 	}
 
 	/**
-	 * Restores the most recent checkpoint of the db with given name.
-	 *
-	 * ## OPTIONS
-	 *
-	 * <name>
-	 * : The name of the checkpoint.
-	 *
-	 * ## EXAMPLES
-	 *
-	 *     wp checkpoint get something-risky
+	 * Restores the most recent checkpoint of the db.
 	 */
 	public function checkpoint_restore( $args ) {
 
@@ -137,7 +119,10 @@ class DBCP_Cli {
 	}
 
 	public function get_snapshot_name( $args ) {
-		if ( is_array( $args ) ) {
+
+		error_log(print_r($args, TRUE));
+
+		if ( key_exists( 0, $args ) ) {
 			return $args[ 0 ];
 		}
 
