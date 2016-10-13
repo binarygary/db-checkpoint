@@ -120,8 +120,6 @@ class DBCP_Cli {
 
 	public function get_snapshot_name( $args ) {
 
-		error_log(print_r($args, TRUE));
-
 		if ( key_exists( 0, $args ) ) {
 			return $args[ 0 ];
 		}
