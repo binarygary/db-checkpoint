@@ -85,6 +85,19 @@ class DBCP_Cli {
 		WP_CLI::success( "Checkpoint Restored!" );
 	}
 
+	public function get_most_recent_file( $backup_name ) {
+
+		$upload_dir = wp_upload_dir();
+		$backupsdir = scandir( $upload_dir[ 'basedir' ] . '/checkpoint-storage/', SCANDIR_SORT_DESCENDING );
+		foreach ( $backupsdir as $backup ) {
+			if( strpos($backup, $backup_name )===0) {
+				return $backup;
+			}
+		}
+
+		return false;
+	}
+
 	/**
 	 * Figure out what name to use with this file.
 	 *
