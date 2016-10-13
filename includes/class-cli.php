@@ -90,7 +90,7 @@ class DBCP_Cli {
 	 *
 	 * @author Gary Kovar
 	 *
-	 * @since 0.1.0
+	 * @since  0.1.0
 	 *
 	 * @param $backup_name
 	 *
@@ -101,7 +101,7 @@ class DBCP_Cli {
 		$upload_dir = wp_upload_dir();
 		$backupsdir = scandir( $upload_dir[ 'basedir' ] . '/checkpoint-storage/', SCANDIR_SORT_DESCENDING );
 		foreach ( $backupsdir as $backup ) {
-			if( strpos($backup, $backup_name )===0) {
+			if ( strpos( $backup, $backup_name ) === 0 ) {
 				return $backup;
 			}
 		}
@@ -134,14 +134,12 @@ class DBCP_Cli {
 	 *
 	 * @author Gary Kovar
 	 *
-	 * @since 0.1.0
+	 * @since  0.1.0
 	 *
 	 * @param $checkpoint_name
 	 */
 	public function maybe_nuke_checkpoints( $checkpoint_name ) {
-		if ($checkpoint_name == $this->get_snapshot_name(null)) {
-			$this->nuke_checkpoints( $checkpoint_name );
-		}
+		$this->nuke_checkpoints( $checkpoint_name );
 	}
 
 	/**
@@ -149,7 +147,7 @@ class DBCP_Cli {
 	 *
 	 * @author Gary Kovar
 	 *
-	 * @since 0.1.0
+	 * @since  0.1.0
 	 *
 	 * @param $checkpoint_name
 	 */
@@ -157,8 +155,8 @@ class DBCP_Cli {
 		$upload_dir = wp_upload_dir();
 		$backupsdir = scandir( $upload_dir[ 'basedir' ] . '/checkpoint-storage/', SCANDIR_SORT_DESCENDING );
 		foreach ( $backupsdir as $backup ) {
-			if(strpos($backup, $checkpoint_name)===0) {
-				unlink($upload_dir['basedir'].'/checkpoint-storage/'.$backup);
+			if ( strpos( $backup, $checkpoint_name ) === 0 ) {
+				unlink( $upload_dir[ 'basedir' ] . '/checkpoint-storage/' . $backup );
 			}
 		}
 	}

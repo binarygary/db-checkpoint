@@ -1,0 +1,12 @@
+{
+  "name": "binarygary/db-checkpoint",
+  "description": "Create quick db snapshots for development purposes.",
+  "homepage": "https://github.com/binarygary/db-checkpoint",
+  "license": "MIT",
+  "require": {
+    "php": ">=5.4"
+  },
+  "autoload": {
+    "files": [ "db-checkpoint.php" ]
+  }
+}
