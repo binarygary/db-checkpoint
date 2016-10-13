@@ -5,11 +5,15 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 	class DB_CheckPoint extends WP_CLI_Command {
 
 		public function __construct() {
-			$this->load_commands();
+
 		}
 
-		public function load_commands() {
-
+		public function check_requirements() {
+			$upload_dir = wp_upload_dir();
+			if ( ! file_exists( $upload_dir[ 'basedir' ] . '/checkpoint-storage' ) ) {
+				mkdir( $upload_dir[ 'basedir' ] . '/checkpoint-storage' );
+			}
+			return true;
 		}
 
 
@@ -24,7 +28,7 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 						'multiple' => false,
 					),
 				),
-				'when'      => 'before_wp_load',
+				'when'      => 'init',
 			);
 		}
 
@@ -40,7 +44,7 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 						'multiple' => false,
 					),
 				),
-				'when'      => 'before_wp_load',
+				'when'      => 'init',
 			);
 		}
 
@@ -52,6 +56,10 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 		 * @since  0.1.0
 		 */
 		public function checkpoint_save( $args ) {
+
+			if (! $this->check_requirements()){
+				exit;
+			}
 
 			$snapshot_name = $this->get_snapshot_name( $args );
 
@@ -76,6 +84,10 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 		 * @since  0.1.0
 		 */
 		public function checkpoint_restore( $args ) {
+
+			if (! $this->check_requirements()){
+				exit;
+			}
 
 			$snapshot_name = $this->get_snapshot_name( $args );
 
