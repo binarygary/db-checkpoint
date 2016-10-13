@@ -2,10 +2,10 @@
 
 WP-CLI command for quick db snapshots. Currently supported commands:
 
-* `dbsnap` -- Create a db snapshot.
-* `dbsnapback` -- Restore a db snapshot.
-* `dbsnap test` -- Create a db snapshot of a specific name.
-* `dbsnapback test` -- Restore a db snapshot of specific name.
+* `wp dbsnap` -- Create a db snapshot.
+* `wp dbsnapback` -- Restore a db snapshot.
+* `wp dbsnap test` -- Create a db snapshot of a specific name.
+* `wp dbsnapback test` -- Restore a db snapshot of specific name.
 
 ## Why doesn't this do _x_?
 
@@ -14,7 +14,6 @@ Because I haven't built it yet. I'm filling in commands as I need them, which me
 ## System Requirements
 
 * PHP >=5.3
-* wp-cli >=0.15.0
 
 ## Setup
 
