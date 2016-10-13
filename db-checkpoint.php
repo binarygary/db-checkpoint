@@ -2,15 +2,14 @@
 
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
 
-	class DB_CheckPoint extends WP_CLI_COMMAND {
+	class DB_CheckPoint extends WP_CLI_Command {
 
 		public function __construct() {
 			$this->load_commands();
 		}
 
 		public function load_commands() {
-			WP_CLI::add_command( 'dbsnap', array ($this, 'checkpoint_save' ), $this->get_checkpoint_save_args() );
-			WP_CLI::add_command( 'dbsnapback', array( $this, 'checkpoint_restore' ), $this->get_checkpoint_restore_args() );
+
 		}
 
 
@@ -188,10 +187,12 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 	}
 
 	function db_checkpoint() {
-		$dbcheck = new DB_CheckPoint;
+		return new DB_CheckPoint;
 	}
 
-	db_checkpoint();
+	$checkpoint = db_checkpoint();
+	WP_CLI::add_command( 'dbsnap', array ($checkpoint, 'checkpoint_save' ), $checkpoint->get_checkpoint_save_args() );
+	WP_CLI::add_command( 'dbsnapback', array( $checkpoint, 'checkpoint_restore' ), $checkpoint->get_checkpoint_restore_args() );
 
 }
 
