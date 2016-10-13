@@ -85,6 +85,17 @@ class DBCP_Cli {
 		WP_CLI::success( "Checkpoint Restored!" );
 	}
 
+	/**
+	 * Get the name of the most recent backup file.
+	 *
+	 * @author Gary Kovar
+	 *
+	 * @since 0.1.0
+	 *
+	 * @param $backup_name
+	 *
+	 * @return bool
+	 */
 	public function get_most_recent_file( $backup_name ) {
 
 		$upload_dir = wp_upload_dir();
