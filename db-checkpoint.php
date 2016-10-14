@@ -295,7 +295,7 @@ if ( ! defined( 'WP_CLI' ) ) {
 			 *
 			 * @author Gary Kovar
 			 *
-			 * @since 0.2.0
+			 * @since  0.2.0
 			 */
 			public function init() {
 				$this->upload_dir = wp_upload_dir();
@@ -312,6 +312,7 @@ if ( ! defined( 'WP_CLI' ) ) {
 			public function hooks() {
 				if ( $this->show_dbsnapback_in_admin_menu() ) {
 					add_action( 'admin_bar_menu', array( $this, 'toolbar_dbsnapback' ), 999 );
+					$this->add_dbsnapback_child_nodes();
 				} else {
 					add_action( 'admin_bar_menu', array( $this, 'toolbar_dbsnap' ), 999 );
 				}
@@ -322,7 +323,7 @@ if ( ! defined( 'WP_CLI' ) ) {
 			 *
 			 * @author Gary Kovar
 			 *
-			 * @since 0.2.0
+			 * @since  0.2.0
 			 *
 			 * @return bool
 			 */
@@ -335,7 +336,34 @@ if ( ! defined( 'WP_CLI' ) ) {
 				if ( count( scandir( $this->upload_dir[ 'basedir' ] . '/checkpoint-storage' ) ) > 2 ) {
 					return true;
 				}
+
 				return false;
+			}
+
+			/**
+			 * Get the list of snaps and add a node for each.
+			 *
+			 * @author Gary Kovar
+			 *
+			 * @since 0.2.0
+			 */
+			public function add_dbsnapback_child_nodes() {
+				$files = $this->get_snaps();
+			}
+
+			/**
+			 * Get the existing snaps.
+			 *
+			 * @author Gary Kovar
+			 *
+			 * @since 0.2.0
+			 */
+			public function get_snaps() {
+				$backupsdir = scandir( $this->upload_dir[ 'basedir' ] . '/checkpoint-storage/', SCANDIR_SORT_DESCENDING );
+				foreach ( $backupsdir as $backup ) {
+					$list[] = explode('.',$backup);
+				}
+				return $list;
 			}
 
 			/**
@@ -350,6 +378,9 @@ if ( ! defined( 'WP_CLI' ) ) {
 					'id'    => 'dbsnapback',
 					'title' => 'DBSnapBack',
 					'href'  => '#',
+					'meta'  => array(
+						'class' => 'dbsnapback',
+					),
 				);
 				$wp_admin_bar->add_node( $args );
 			}
@@ -366,6 +397,9 @@ if ( ! defined( 'WP_CLI' ) ) {
 					'id'    => 'dbsnap',
 					'title' => 'DBSnap',
 					'href'  => '#',
+					'meta'  => array(
+						'class' => 'dbsnap',
+					),
 				);
 				$wp_admin_bar->add_node( $args );
 			}
