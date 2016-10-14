@@ -312,7 +312,7 @@ if ( ! defined( 'WP_CLI' ) ) {
 			public function hooks() {
 				if ( $this->show_dbsnapback_in_admin_menu() ) {
 					add_action( 'admin_bar_menu', array( $this, 'toolbar_dbsnapback' ), 999 );
-					$this->add_dbsnapback_child_nodes();
+					add_action( 'admin_bar_menu', array( $this, 'add_dbsnapback_child_nodes' ), 999);
 				} else {
 					add_action( 'admin_bar_menu', array( $this, 'toolbar_dbsnap' ), 999 );
 				}
@@ -349,12 +349,10 @@ if ( ! defined( 'WP_CLI' ) ) {
 			 *
 			 * @TODO this needs to add_action( 'admin_bar_menu' , ......)
 			 */
-			public function add_dbsnapback_child_nodes() {
+			public function add_dbsnapback_child_nodes( $wp_admin_bar ) {
 				$files = $this->get_snaps();
 
 				foreach ( $files as $file ) {
-
-					print_r($file);
 
 					$args = array(
 						'id'     => $file[ 0 ],
