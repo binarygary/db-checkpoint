@@ -347,7 +347,6 @@ if ( ! defined( 'WP_CLI' ) ) {
 			 *
 			 * @since  0.2.0
 			 *
-			 * @TODO this needs to add_action( 'admin_bar_menu' , ......)
 			 */
 			public function add_dbsnapback_child_nodes( $wp_admin_bar ) {
 				$files = $this->get_snaps();
