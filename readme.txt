@@ -35,5 +35,9 @@ wp-content/checkpoint-storage/
 
 ## Changelog ##
 
+### 0.1.1 ###
+* Fixed a function name in the plugin class.
+* Fixed readme.txt formatting.
+
 ### 0.1.0 ###
 * First release
