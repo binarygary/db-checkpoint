@@ -321,10 +321,14 @@ if ( ! defined( 'WP_CLI' ) ) {
 			 * @return bool
 			 */
 			public function show_dbsnapback_in_admin_menu() {
-				if ( count( scandir( $this->upload_dir[ 'basedir' ] . '/checkpoint-storage' ) ) ) {
-					return true;
+
+				if ( ! file_exists( $this->upload_dir[ 'basedir' ] . '/checkpoint-storage' ) ) {
+					mkdir( $this->upload_dir[ 'basedir' ] . '/checkpoint-storage' );
 				}
 
+				if ( count( scandir( $this->upload_dir[ 'basedir' ] . '/checkpoint-storage' ) ) > 2 ) {
+					return true;
+				}
 				return false;
 			}
 
