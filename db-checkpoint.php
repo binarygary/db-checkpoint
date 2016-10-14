@@ -283,7 +283,7 @@ if ( ! defined( 'WP_CLI' ) ) {
 	if ( ! class_exists( 'DB_CheckPoint_Plugin' ) ) {
 		class DB_CheckPoint_Plugin {
 
-			public function hook() {
+			public function hooks() {
 				// Will add the hook here to allow for admin click to restore.
 			}
 		}
