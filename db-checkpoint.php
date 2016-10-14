@@ -316,7 +316,11 @@ if ( ! defined( 'WP_CLI' ) ) {
 			}
 
 			/**
+			 * Check and see if we should show the admin bar by counting how many files are in the backup dir.
 			 *
+			 * @author Gary Kovar
+			 *
+			 * @since 0.2.0
 			 *
 			 * @return bool
 			 */
