@@ -346,6 +346,8 @@ if ( ! defined( 'WP_CLI' ) ) {
 			 * @author Gary Kovar
 			 *
 			 * @since  0.2.0
+			 *
+			 * @TODO this needs to add_action( 'admin_bar_menu' , ......)
 			 */
 			public function add_dbsnapback_child_nodes() {
 				$files = $this->get_snaps();
