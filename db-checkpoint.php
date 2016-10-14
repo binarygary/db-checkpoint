@@ -40,10 +40,6 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 	if ( ! class_exists( 'DB_CheckPoint' ) ) {
 		class DB_CheckPoint extends WP_CLI_Command {
 
-			public function __construct() {
-
-			}
-
 			public function check_requirements() {
 				$upload_dir = wp_upload_dir();
 				if ( ! file_exists( $upload_dir[ 'basedir' ] . '/checkpoint-storage' ) ) {
@@ -53,7 +49,16 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 				return true;
 			}
 
-
+			/**
+			 * Returns the array of configuration setup info for dbsnap command.
+			 *
+			 * @author Gary Kovar
+			 *
+			 * @since  0.1.0
+			 *
+			 * @return array
+			 *
+			 */
 			public function get_checkpoint_save_args() {
 				return array(
 					'shortdesc' => 'Restores the checkpoint image of the database.',
@@ -69,7 +74,16 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 				);
 			}
 
-
+			/**
+			 * Returns the array of configuration setup info for dbsnapback command.
+			 *
+			 * @author Gary Kovar
+			 *
+			 * @since  0.1.0
+			 *
+			 * @return array
+			 *
+			 */
 			public function get_checkpoint_restore_args() {
 				return array(
 					'shortdesc' => 'Creates a simple checkpoint image of the database.',
@@ -235,15 +249,28 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 
 		}
 
+		/**
+		 * Kick off!
+		 *
+		 * @return DB_CheckPoint
+		 */
 		function db_checkpoint() {
 			return new DB_CheckPoint;
 		}
 
 		$checkpoint = db_checkpoint();
+
+		/**
+		 * Add dbsnap as a WP CLI command.
+		 */
 		WP_CLI::add_command( 'dbsnap', array(
 			$checkpoint,
 			'checkpoint_save',
 		), $checkpoint->get_checkpoint_save_args() );
+
+		/**
+		 * Add dbsnapback as a WP CLI command.
+		 */
 		WP_CLI::add_command( 'dbsnapback', array(
 			$checkpoint,
 			'checkpoint_restore',
@@ -256,12 +283,16 @@ if ( ! defined( 'WP_CLI' ) ) {
 	if ( ! class_exists( 'DB_CheckPoint_Plugin' ) ) {
 		class DB_CheckPoint_Plugin {
 
-			public
-			function hook() {
-
+			public function hook() {
+				// Will add the hook here to allow for admin click to restore.
 			}
 		}
 
+		/**
+		 * Kick Off!
+		 *
+		 * @return DB_CheckPoint_Plugin
+		 */
 		function db_checkpoint_plugin() {
 			return new DB_CheckPoint_Plugin();
 		}
