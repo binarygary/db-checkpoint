@@ -345,10 +345,26 @@ if ( ! defined( 'WP_CLI' ) ) {
 			 *
 			 * @author Gary Kovar
 			 *
-			 * @since 0.2.0
+			 * @since  0.2.0
 			 */
 			public function add_dbsnapback_child_nodes() {
 				$files = $this->get_snaps();
+
+				foreach ( $files as $file ) {
+
+					print_r($file);
+
+					$args = array(
+						'id'     => $file[ 0 ],
+						'title'  => $file[ 0 ],
+						'href'   => '#',
+						'parent' => 'dbsnapback',
+						'meta'   => array(
+							'class' => 'dbsnapback',
+						),
+					);
+					$wp_admin_bar->add_node( $args );
+				}
 			}
 
 			/**
@@ -356,13 +372,17 @@ if ( ! defined( 'WP_CLI' ) ) {
 			 *
 			 * @author Gary Kovar
 			 *
-			 * @since 0.2.0
+			 * @since  0.2.0
 			 */
 			public function get_snaps() {
 				$backupsdir = scandir( $this->upload_dir[ 'basedir' ] . '/checkpoint-storage/', SCANDIR_SORT_DESCENDING );
 				foreach ( $backupsdir as $backup ) {
-					$list[] = explode('.',$backup);
+					$file_exploded = explode( '.', $backup );
+					if ( $file_exploded[ 0 ] != '' ) {
+						$list[] = $file_exploded;
+					}
 				}
+
 				return $list;
 			}
 
