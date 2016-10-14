@@ -283,8 +283,32 @@ if ( ! defined( 'WP_CLI' ) ) {
 	if ( ! class_exists( 'DB_CheckPoint_Plugin' ) ) {
 		class DB_CheckPoint_Plugin {
 
-			public function hook() {
-				// Will add the hook here to allow for admin click to restore.
+			/**
+			 * Hook to add functions to WP
+			 *
+			 * @author Gary Kovar
+			 *
+			 * @since  0.2.0
+			 */
+			public function hooks() {
+				add_action( 'admin_bar_menu', array( $this, 'toolbar_dbsnap' ), 999 );
+			}
+
+			/**
+			 * Add link to wp-admin toolbar.
+			 *
+			 * @author Gary Kovar
+			 *
+			 * @since  0.2.0
+			 */
+			public function toolbar_dbsnap( $wp_admin_bar ) {
+				$args = array(
+					'id'    => 'my_page',
+					'title' => 'My Page',
+					'href'  => 'http://mysite.com/my-page/',
+					'meta'  => array( 'class' => 'my-toolbar-page' ),
+				);
+				$wp_admin_bar->add_node( $args );
 			}
 		}
 
