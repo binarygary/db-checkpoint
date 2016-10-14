@@ -284,6 +284,25 @@ if ( ! defined( 'WP_CLI' ) ) {
 		class DB_CheckPoint_Plugin {
 
 			/**
+			 * The return from wp_upload_dir();
+			 *
+			 * @var string
+			 */
+			private $upload_dir;
+
+			/**
+			 * Initiate the class and set some of the regular variables.
+			 *
+			 * @author Gary Kovar
+			 *
+			 * @since 0.2.0
+			 */
+			public function init() {
+				$this->upload_dir = wp_upload_dir();
+				$this->hooks();
+			}
+
+			/**
 			 * Hook to add functions to WP
 			 *
 			 * @author Gary Kovar
@@ -291,7 +310,22 @@ if ( ! defined( 'WP_CLI' ) ) {
 			 * @since  0.2.0
 			 */
 			public function hooks() {
-				add_action( 'admin_bar_menu', array( $this, 'toolbar_dbsnap' ), 999 );
+				if ( $this->show_dbsnapback_in_admin_menu() ) {
+					add_action( 'admin_bar_menu', array( $this, 'toolbar_dbsnap' ), 999 );
+				}
+			}
+
+			/**
+			 *
+			 *
+			 * @return bool
+			 */
+			public function show_dbsnapback_in_admin_menu() {
+				if ( count( scandir( $this->upload_dir[ 'basedir' ] . '/checkpoint-storage' ) ) ) {
+					return true;
+				}
+
+				return false;
 			}
 
 			/**
@@ -303,10 +337,9 @@ if ( ! defined( 'WP_CLI' ) ) {
 			 */
 			public function toolbar_dbsnap( $wp_admin_bar ) {
 				$args = array(
-					'id'    => 'my_page',
-					'title' => 'My Page',
-					'href'  => 'http://mysite.com/my-page/',
-					'meta'  => array( 'class' => 'my-toolbar-page' ),
+					'id'    => 'dbsnapback',
+					'title' => 'DBSnapBack',
+					'href'  => '#',
 				);
 				$wp_admin_bar->add_node( $args );
 			}
@@ -321,6 +354,6 @@ if ( ! defined( 'WP_CLI' ) ) {
 			return new DB_CheckPoint_Plugin();
 		}
 
-		add_action( 'plugins_loaded', array( db_checkpoint_plugin(), 'hooks' ) );
+		add_action( 'plugins_loaded', array( db_checkpoint_plugin(), 'init' ) );
 	}
 }
