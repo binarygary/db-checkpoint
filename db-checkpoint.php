@@ -311,6 +311,8 @@ if ( ! defined( 'WP_CLI' ) ) {
 			 */
 			public function hooks() {
 				if ( $this->show_dbsnapback_in_admin_menu() ) {
+					add_action( 'admin_bar_menu', array( $this, 'toolbar_dbsnapback' ), 999 );
+				} else {
 					add_action( 'admin_bar_menu', array( $this, 'toolbar_dbsnap' ), 999 );
 				}
 			}
@@ -337,7 +339,23 @@ if ( ! defined( 'WP_CLI' ) ) {
 			}
 
 			/**
-			 * Add link to wp-admin toolbar.
+			 * Add restore link to toolbar.
+			 *
+			 * @author Gary Kovar
+			 *
+			 * @since  0.2.0
+			 */
+			public function toolbar_dbsnapback( $wp_admin_bar ) {
+				$args = array(
+					'id'    => 'dbsnapback',
+					'title' => 'DBSnapBack',
+					'href'  => '#',
+				);
+				$wp_admin_bar->add_node( $args );
+			}
+
+			/**
+			 * Add snapshot link to toolbar.
 			 *
 			 * @author Gary Kovar
 			 *
@@ -345,8 +363,8 @@ if ( ! defined( 'WP_CLI' ) ) {
 			 */
 			public function toolbar_dbsnap( $wp_admin_bar ) {
 				$args = array(
-					'id'    => 'dbsnapback',
-					'title' => 'DBSnapBack',
+					'id'    => 'dbsnap',
+					'title' => 'DBSnap',
 					'href'  => '#',
 				);
 				$wp_admin_bar->add_node( $args );
