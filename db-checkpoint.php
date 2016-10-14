@@ -28,7 +28,7 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 						'multiple' => false,
 					),
 				),
-				'when'      => 'init',
+				'when'      => 'after_wp_load',
 			);
 		}
 
@@ -44,7 +44,7 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 						'multiple' => false,
 					),
 				),
-				'when'      => 'init',
+				'when'      => 'after_wp_load',
 			);
 		}
 
