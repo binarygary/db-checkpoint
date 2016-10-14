@@ -3,10 +3,10 @@
  * Plugin Name: DB Snapshot
  * Plugin URI:  https://www.binarygary.com/
  * Description: Extends WP-CLI to include a db snapshot for development purposes.
- * Version:     0.1.0
+ * Version:     0.1.1
  * Author:      Gary Kovar
  * Author URI:  https://www.binarygary.com/
- * Donate link: https://www.binarygary.com/
+ * Donate link: https://bethematch.org/
  * License:     GPLv2
  * Text Domain: db-snapshot
  * Domain Path: /languages
@@ -14,7 +14,7 @@
  * @link    https://www.binarygary.com/
  *
  * @package DB Snapshot
- * @version 0.1.0
+ * @version 0.1.1
  */
 
 /**
