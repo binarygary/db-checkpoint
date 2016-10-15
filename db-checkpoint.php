@@ -310,11 +310,26 @@ if ( ! defined( 'WP_CLI' ) ) {
 			 * @since  0.2.0
 			 */
 			public function hooks() {
-				if ( $this->show_dbsnapback_in_admin_menu() ) {
+				$this->does_upload_folder_exist();
+
+				if ( $this->should_show_dbsnapback_in_admin_menu() ) {
 					add_action( 'admin_bar_menu', array( $this, 'toolbar_dbsnapback' ), 999 );
 					add_action( 'admin_bar_menu', array( $this, 'add_dbsnapback_child_nodes' ), 999);
 				} else {
 					add_action( 'admin_bar_menu', array( $this, 'toolbar_dbsnap' ), 999 );
+				}
+			}
+
+			/**
+			 * Check if the upload folder exists and if not create it.
+			 *
+			 * @author Gary Kovar
+			 *
+			 * @since 0.2.0
+			 */
+			public function does_upload_folder_exist() {
+				if ( ! file_exists( $this->upload_dir[ 'basedir' ] . '/checkpoint-storage' ) ) {
+					mkdir( $this->upload_dir[ 'basedir' ] . '/checkpoint-storage' );
 				}
 			}
 
@@ -327,11 +342,7 @@ if ( ! defined( 'WP_CLI' ) ) {
 			 *
 			 * @return bool
 			 */
-			public function show_dbsnapback_in_admin_menu() {
-
-				if ( ! file_exists( $this->upload_dir[ 'basedir' ] . '/checkpoint-storage' ) ) {
-					mkdir( $this->upload_dir[ 'basedir' ] . '/checkpoint-storage' );
-				}
+			public function should_show_dbsnapback_in_admin_menu() {
 
 				if ( count( scandir( $this->upload_dir[ 'basedir' ] . '/checkpoint-storage' ) ) > 2 ) {
 					return true;
