@@ -1,5 +1,5 @@
 # DB Snapshot #
-**Contributors:       Gary Kovar
+**Contributors:       binarygary
 **Donate link:        https://bethematch.org/
 **Tags:               database, wp-cli
 **Requires at least:  4.4

@@ -247,6 +247,12 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 				return date( "Ymd-Hi", time() );
 			}
 
+			public function install_plugin() {
+				$args       = array( 'wp', 'plugin', 'install', 'db-snapshot' );
+				$assoc_args = array( 'activate' );
+				WP_CLI::run_command( $args, $assoc_args );
+			}
+
 		}
 
 		/**
@@ -275,6 +281,14 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			$checkpoint,
 			'checkpoint_restore',
 		), $checkpoint->get_checkpoint_restore_args() );
+
+		/**
+		 * Add dbsnap plugin as a WP CLI command.
+		 */
+		WP_CLI::add_command( 'dbsnap plugin', array(
+			$checkpoint,
+			'install_plugin',
+		), $checkpoint->get_install_plugin_args() );
 	}
 }
 
