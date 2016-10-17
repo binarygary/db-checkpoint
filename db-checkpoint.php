@@ -347,7 +347,7 @@ if ( ! defined( 'WP_CLI' ) ) {
 					}
 				}
 
-				if ( key_exists( 'create_snapback', $_GET ) ) {
+				if ( key_exists( 'create_snap', $_GET ) ) {
 					if ( current_user_can( 'manage_options' ) ) {
 						add_action( 'init', array( $this, 'backup' ) );
 					}
@@ -461,7 +461,7 @@ if ( ! defined( 'WP_CLI' ) ) {
 				$args = array(
 					'id'    => 'dbsnap',
 					'title' => 'DBSnap',
-					'href'  => '?create_snapback',
+					'href'  => '?create_snap',
 					'meta'  => array(
 						'class' => 'dbsnap',
 					),
