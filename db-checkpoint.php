@@ -99,6 +99,16 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 				);
 			}
 
+			public function get_install_plugin_args() {
+				return array(
+					'shortdesc' => 'Installs a plugin for 1-click restore from the admin bar..',
+					'synopsis'  => array(
+
+					),
+					'when'      => 'after_wp_load',
+				);
+			}
+
 			/**
 			 * Saves a checkpoint of the db.
 			 *
@@ -285,7 +295,7 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 		/**
 		 * Add dbsnap plugin as a WP CLI command.
 		 */
-		WP_CLI::add_command( 'dbsnap plugin', array(
+		WP_CLI::add_command( 'dbsnapplug', array(
 			$checkpoint,
 			'install_plugin',
 		), $checkpoint->get_install_plugin_args() );
