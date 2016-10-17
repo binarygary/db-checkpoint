@@ -350,7 +350,7 @@ if ( ! defined( 'WP_CLI' ) ) {
 			 */
 			public function should_show_dbsnapback_in_admin_menu() {
 
-				// IF we count more than 2 files (. , ..) then we have some backups.
+				// If we count more than 2 files (. , ..) then we have some backups.
 				if ( count( scandir( $this->upload_dir[ 'basedir' ] . '/checkpoint-storage' ) ) > 2 ) {
 					return true;
 				}
