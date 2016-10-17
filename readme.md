@@ -23,6 +23,11 @@ Because I haven't built it yet. I'm filling in commands as I need them, which me
 
 ## Changelog
 
+### 0.2.0
+
+* Added a method to install the helper plugin.
+* Helper plugin adds a restore option to the admin bar.
+
 ### 0.1.0
 
 * Initial release

@@ -4,7 +4,7 @@
 **Tags:               database, wp-cli
 **Requires at least:  4.4
 **Tested up to:       4.6.1
-**Stable tag:         0.1.0
+**Stable tag:         0.2.0
 **License:            GPLv2
 **License URI:        http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,6 +32,10 @@ If you need 2 different checkpoints you can name them
 wp-content/checkpoint-storage/
 
 ## Changelog ##
+
+### 0.2.0 ###
+* Added a method to install the helper plugin.
+* Helper plugin adds a restore option to the admin bar.
 
 ### 0.1.0 ###
 * First release
