@@ -314,9 +314,13 @@ if ( ! defined( 'WP_CLI' ) ) {
 
 				if ( $this->should_show_dbsnapback_in_admin_menu() ) {
 					add_action( 'admin_bar_menu', array( $this, 'toolbar_dbsnapback' ), 999 );
-					add_action( 'admin_bar_menu', array( $this, 'add_dbsnapback_child_nodes' ), 999);
+					add_action( 'admin_bar_menu', array( $this, 'add_dbsnapback_child_nodes' ), 999 );
 				} else {
 					add_action( 'admin_bar_menu', array( $this, 'toolbar_dbsnap' ), 999 );
+				}
+
+				if ( key_exists( 'snpackback_restore', $_GET ) ) {
+					add_action( 'init', array( $this, 'restore' ) );
 				}
 			}
 
@@ -325,7 +329,7 @@ if ( ! defined( 'WP_CLI' ) ) {
 			 *
 			 * @author Gary Kovar
 			 *
-			 * @since 0.2.0
+			 * @since  0.2.0
 			 */
 			public function does_upload_folder_exist() {
 				if ( ! file_exists( $this->upload_dir[ 'basedir' ] . '/checkpoint-storage' ) ) {
@@ -344,6 +348,7 @@ if ( ! defined( 'WP_CLI' ) ) {
 			 */
 			public function should_show_dbsnapback_in_admin_menu() {
 
+				// IF we count more than 2 files (. , ..) then we have some backups.
 				if ( count( scandir( $this->upload_dir[ 'basedir' ] . '/checkpoint-storage' ) ) > 2 ) {
 					return true;
 				}
@@ -367,7 +372,7 @@ if ( ! defined( 'WP_CLI' ) ) {
 					$args = array(
 						'id'     => $file[ 0 ],
 						'title'  => $file[ 0 ],
-						'href'   => '#',
+						'href'   => '?snpackback_restore=' . $file[ 0 ] . '.' . $file[ 1 ] . '.sql',
 						'parent' => 'dbsnapback',
 						'meta'   => array(
 							'class' => 'dbsnapback',
@@ -432,6 +437,19 @@ if ( ! defined( 'WP_CLI' ) ) {
 					),
 				);
 				$wp_admin_bar->add_node( $args );
+			}
+
+			/**
+			 * Restores the selected snapshot.
+			 *
+			 * @author Gary Kovar
+			 *
+			 * @since 0.2.0
+			 */
+			public function restore() {
+				$filename = $_GET[ 'snpackback_restore' ];
+				$command  = 'wp db import ' . $this->upload_dir[ 'basedir' ] . '/checkpoint-storage/' . $filename;
+				exec( $command );
 			}
 		}
 
