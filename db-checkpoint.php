@@ -320,7 +320,9 @@ if ( ! defined( 'WP_CLI' ) ) {
 				}
 
 				if ( key_exists( 'snpackback_restore', $_GET ) ) {
-					add_action( 'init', array( $this, 'restore' ) );
+					if ( current_user_can( 'manage_options' ) ) {
+						add_action( 'init', array( $this, 'restore' ) );
+					}
 				}
 			}
 
@@ -444,13 +446,14 @@ if ( ! defined( 'WP_CLI' ) ) {
 			 *
 			 * @author Gary Kovar
 			 *
-			 * @since 0.2.0
+			 * @since  0.2.0
 			 */
 			public function restore() {
 				$filename = $_GET[ 'snpackback_restore' ];
 				$command  = 'wp db import ' . $this->upload_dir[ 'basedir' ] . '/checkpoint-storage/' . $filename;
 				exec( $command );
 			}
+
 		}
 
 		/**
