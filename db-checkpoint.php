@@ -102,9 +102,7 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			public function get_install_plugin_args() {
 				return array(
 					'shortdesc' => 'Installs a plugin for 1-click restore from the admin bar..',
-					'synopsis'  => array(
-
-					),
+					'synopsis'  => array(),
 					'when'      => 'after_wp_load',
 				);
 			}
@@ -259,7 +257,7 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 
 			public function install_plugin() {
 				$args       = array( 'plugin', 'install', 'db-snapshot' );
-				$assoc_args = array( 'activate'=>'activate' );
+				$assoc_args = array( 'activate' => 'activate' );
 				WP_CLI::run_command( $args, $assoc_args );
 			}
 
@@ -346,6 +344,12 @@ if ( ! defined( 'WP_CLI' ) ) {
 				if ( key_exists( 'snpackback_restore', $_GET ) ) {
 					if ( current_user_can( 'manage_options' ) ) {
 						add_action( 'init', array( $this, 'restore' ) );
+					}
+				}
+
+				if ( key_exists( 'create_snapback', $_GET ) ) {
+					if ( current_user_can( 'manage_options' ) ) {
+						add_action( 'init', array( $this, 'backup' ) );
 					}
 				}
 			}
@@ -438,7 +442,7 @@ if ( ! defined( 'WP_CLI' ) ) {
 				$args = array(
 					'id'    => 'dbsnapback',
 					'title' => 'DBSnapBack',
-					'href'  => '#',
+					'href'  => '?create_snapback',
 					'meta'  => array(
 						'class' => 'dbsnapback',
 					),
@@ -463,6 +467,11 @@ if ( ! defined( 'WP_CLI' ) ) {
 					),
 				);
 				$wp_admin_bar->add_node( $args );
+			}
+
+			public function backup() {
+				$command = 'wp dbsnap';
+				exec( $command );
 			}
 
 			/**
