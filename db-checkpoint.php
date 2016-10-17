@@ -3,7 +3,7 @@
  * Plugin Name: DB Snapshot
  * Plugin URI:  https://www.binarygary.com/
  * Description: Extends WP-CLI to include a db snapshot for development purposes.
- * Version:     0.1.1
+ * Version:     0.2.0
  * Author:      Gary Kovar
  * Author URI:  https://www.binarygary.com/
  * Donate link: https://bethematch.org/
@@ -247,6 +247,12 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 				return date( "Ymd-Hi", time() );
 			}
 
+			public function install_plugin() {
+				$args       = array( 'wp', 'plugin', 'install', 'db-snapshot' );
+				$assoc_args = array( 'activate' );
+				WP_CLI::run_command( $args, $assoc_args );
+			}
+
 		}
 
 		/**
@@ -275,6 +281,14 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			$checkpoint,
 			'checkpoint_restore',
 		), $checkpoint->get_checkpoint_restore_args() );
+
+		/**
+		 * Add dbsnap plugin as a WP CLI command.
+		 */
+		WP_CLI::add_command( 'dbsnap plugin', array(
+			$checkpoint,
+			'install_plugin',
+		), $checkpoint->get_install_plugin_args() );
 	}
 }
 
@@ -283,9 +297,177 @@ if ( ! defined( 'WP_CLI' ) ) {
 	if ( ! class_exists( 'DB_CheckPoint_Plugin' ) ) {
 		class DB_CheckPoint_Plugin {
 
-			public function hooks() {
-				// Will add the hook here to allow for admin click to restore.
+			/**
+			 * The return from wp_upload_dir();
+			 *
+			 * @var string
+			 */
+			private $upload_dir;
+
+			/**
+			 * Initiate the class and set some of the regular variables.
+			 *
+			 * @author Gary Kovar
+			 *
+			 * @since  0.2.0
+			 */
+			public function init() {
+				$this->upload_dir = wp_upload_dir();
+				$this->hooks();
 			}
+
+			/**
+			 * Hook to add functions to WP
+			 *
+			 * @author Gary Kovar
+			 *
+			 * @since  0.2.0
+			 */
+			public function hooks() {
+				$this->does_upload_folder_exist();
+
+				if ( $this->should_show_dbsnapback_in_admin_menu() ) {
+					add_action( 'admin_bar_menu', array( $this, 'toolbar_dbsnapback' ), 999 );
+					add_action( 'admin_bar_menu', array( $this, 'add_dbsnapback_child_nodes' ), 999 );
+				} else {
+					add_action( 'admin_bar_menu', array( $this, 'toolbar_dbsnap' ), 999 );
+				}
+
+				if ( key_exists( 'snpackback_restore', $_GET ) ) {
+					if ( current_user_can( 'manage_options' ) ) {
+						add_action( 'init', array( $this, 'restore' ) );
+					}
+				}
+			}
+
+			/**
+			 * Check if the upload folder exists and if not create it.
+			 *
+			 * @author Gary Kovar
+			 *
+			 * @since  0.2.0
+			 */
+			public function does_upload_folder_exist() {
+				if ( ! file_exists( $this->upload_dir[ 'basedir' ] . '/checkpoint-storage' ) ) {
+					mkdir( $this->upload_dir[ 'basedir' ] . '/checkpoint-storage' );
+				}
+			}
+
+			/**
+			 * Check and see if we should show the admin bar by counting how many files are in the backup dir.
+			 *
+			 * @author Gary Kovar
+			 *
+			 * @since  0.2.0
+			 *
+			 * @return bool
+			 */
+			public function should_show_dbsnapback_in_admin_menu() {
+
+				// If we count more than 2 files (. , ..) then we have some backups.
+				if ( count( scandir( $this->upload_dir[ 'basedir' ] . '/checkpoint-storage' ) ) > 2 ) {
+					return true;
+				}
+
+				return false;
+			}
+
+			/**
+			 * Get the list of snaps and add a node for each.
+			 *
+			 * @author Gary Kovar
+			 *
+			 * @since  0.2.0
+			 *
+			 */
+			public function add_dbsnapback_child_nodes( $wp_admin_bar ) {
+				$files = $this->get_snaps();
+
+				foreach ( $files as $file ) {
+
+					$args = array(
+						'id'     => $file[ 0 ],
+						'title'  => $file[ 0 ],
+						'href'   => '?snpackback_restore=' . $file[ 0 ] . '.' . $file[ 1 ] . '.sql',
+						'parent' => 'dbsnapback',
+						'meta'   => array(
+							'class' => 'dbsnapback',
+						),
+					);
+					$wp_admin_bar->add_node( $args );
+				}
+			}
+
+			/**
+			 * Get the existing snaps.
+			 *
+			 * @author Gary Kovar
+			 *
+			 * @since  0.2.0
+			 */
+			public function get_snaps() {
+				$backupsdir = scandir( $this->upload_dir[ 'basedir' ] . '/checkpoint-storage/', SCANDIR_SORT_DESCENDING );
+				foreach ( $backupsdir as $backup ) {
+					$file_exploded = explode( '.', $backup );
+					if ( $file_exploded[ 0 ] != '' ) {
+						$list[] = $file_exploded;
+					}
+				}
+
+				return $list;
+			}
+
+			/**
+			 * Add restore link to toolbar.
+			 *
+			 * @author Gary Kovar
+			 *
+			 * @since  0.2.0
+			 */
+			public function toolbar_dbsnapback( $wp_admin_bar ) {
+				$args = array(
+					'id'    => 'dbsnapback',
+					'title' => 'DBSnapBack',
+					'href'  => '#',
+					'meta'  => array(
+						'class' => 'dbsnapback',
+					),
+				);
+				$wp_admin_bar->add_node( $args );
+			}
+
+			/**
+			 * Add snapshot link to toolbar.
+			 *
+			 * @author Gary Kovar
+			 *
+			 * @since  0.2.0
+			 */
+			public function toolbar_dbsnap( $wp_admin_bar ) {
+				$args = array(
+					'id'    => 'dbsnap',
+					'title' => 'DBSnap',
+					'href'  => '#',
+					'meta'  => array(
+						'class' => 'dbsnap',
+					),
+				);
+				$wp_admin_bar->add_node( $args );
+			}
+
+			/**
+			 * Restores the selected snapshot.
+			 *
+			 * @author Gary Kovar
+			 *
+			 * @since  0.2.0
+			 */
+			public function restore() {
+				$filename = $_GET[ 'snpackback_restore' ];
+				$command  = 'wp db import ' . $this->upload_dir[ 'basedir' ] . '/checkpoint-storage/' . $filename;
+				exec( $command );
+			}
+
 		}
 
 		/**
@@ -297,6 +479,6 @@ if ( ! defined( 'WP_CLI' ) ) {
 			return new DB_CheckPoint_Plugin();
 		}
 
-		add_action( 'plugins_loaded', array( db_checkpoint_plugin(), 'hooks' ) );
+		add_action( 'plugins_loaded', array( db_checkpoint_plugin(), 'init' ) );
 	}
 }
