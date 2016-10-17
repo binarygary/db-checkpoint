@@ -259,7 +259,7 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 
 			public function install_plugin() {
 				$args       = array( 'plugin', 'install', 'db-snapshot' );
-				$assoc_args = array( 'activate'==>'activate' );
+				$assoc_args = array( 'activate'=>'activate' );
 				WP_CLI::run_command( $args, $assoc_args );
 			}
 
