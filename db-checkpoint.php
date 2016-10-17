@@ -61,7 +61,7 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			 */
 			public function get_checkpoint_save_args() {
 				return array(
-					'shortdesc' => 'Restores the checkpoint image of the database.',
+					'shortdesc' => 'Creates a simple checkpoint image of the database.',
 					'synopsis'  => array(
 						array(
 							'type'     => 'positional',
@@ -86,7 +86,7 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			 */
 			public function get_checkpoint_restore_args() {
 				return array(
-					'shortdesc' => 'Creates a simple checkpoint image of the database.',
+					'shortdesc' => 'Restores the checkpoint image of the database.',
 					'synopsis'  => array(
 						array(
 							'type'     => 'positional',
@@ -442,7 +442,7 @@ if ( ! defined( 'WP_CLI' ) ) {
 				$args = array(
 					'id'    => 'dbsnapback',
 					'title' => 'DBSnapBack',
-					'href'  => '?create_snapback',
+					'href'  => '#',
 					'meta'  => array(
 						'class' => 'dbsnapback',
 					),
@@ -461,7 +461,7 @@ if ( ! defined( 'WP_CLI' ) ) {
 				$args = array(
 					'id'    => 'dbsnap',
 					'title' => 'DBSnap',
-					'href'  => '#',
+					'href'  => '?create_snapback',
 					'meta'  => array(
 						'class' => 'dbsnap',
 					),
