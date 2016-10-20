@@ -1,6 +1,7 @@
 {
   "name": "binarygary/db-checkpoint",
   "description": "Create quick db snapshots for development purposes.",
+  "type": "wp-cli-package",
   "keywords": ["wp-cli", "git", "deploy", "dump", "mysql", "uploads", "wordpress", "db snapshot"],
   "homepage": "https://github.com/binarygary/db-checkpoint",
   "license": "MIT",
