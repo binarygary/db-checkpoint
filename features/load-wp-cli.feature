@@ -1,10 +1,10 @@
-Feature: Test that WP-CLI loads.
+Feature: Test if dbsnap works.
 
-  Scenario: WP-CLI loads for your tests
+  Scenario: Backup a db
     Given a WP install
-
-    When I run `wp eval 'echo "Hello world.";'`
-    Then STDOUT should contain:
-      """
-      Hello world.
-      """
+	
+	When I run `wp dbsnap`
+	Then STDOUT should contain:
+	  """
+	  Success: Checkpoint Saved!
+	  """
