@@ -235,9 +235,13 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			public function nuke_checkpoints( $checkpoint_name ) {
 				$upload_dir = wp_upload_dir();
 				$backupsdir = scandir( $upload_dir[ 'basedir' ] . '/checkpoint-storage/', SCANDIR_SORT_DESCENDING );
-				foreach ( $backupsdir as $backup ) {
-					if ( strpos( $backup, $checkpoint_name ) === 0 ) {
-						unlink( $upload_dir[ 'basedir' ] . '/checkpoint-storage/' . $backup );
+
+				// Make sure we have a list of file before trying to process them.
+				if ( is_array( $backupsdir) ){
+					foreach ( $backupsdir as $backup ) {
+						if ( strpos( $backup, $checkpoint_name ) === 0 ) {
+							unlink( $upload_dir[ 'basedir' ] . '/checkpoint-storage/' . $backup );
+						}
 					}
 				}
 			}
