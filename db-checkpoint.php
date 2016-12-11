@@ -14,7 +14,6 @@
  * @link    https://www.binarygary.com/
  *
  * @package DB Snapshot
- * @version 0.1.1
  */
 
 /**
@@ -42,8 +41,8 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 
 			public function check_requirements() {
 				$upload_dir = wp_upload_dir();
-				if ( ! file_exists( $upload_dir[ 'basedir' ] . '/checkpoint-storage' ) ) {
-					mkdir( $upload_dir[ 'basedir' ] . '/checkpoint-storage' );
+				if ( ! file_exists( $upload_dir['basedir'] . '/checkpoint-storage' ) ) {
+					mkdir( $upload_dir['basedir'] . '/checkpoint-storage' );
 				}
 
 				return true;
@@ -126,8 +125,8 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 
 				$upload_dir = wp_upload_dir();
 
-				$location  = $upload_dir[ 'basedir' ] . '/checkpoint-storage/' . $snapshot_name . '.' . $this->human_timestamp() . '.sql';
-				$args[ 0 ] = $location;
+				$location = $upload_dir['basedir'] . '/checkpoint-storage/' . $snapshot_name . '.' . $this->human_timestamp() . '.sql';
+				$args[0]  = $location;
 
 				$db = new DB_Command;
 				$db->export( $args, null );
@@ -153,12 +152,12 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 				$upload_dir = wp_upload_dir();
 
 				if ( $restore_file = $this->get_most_recent_file( $snapshot_name ) ) {
-					$location = $upload_dir[ 'basedir' ] . '/checkpoint-storage/' . $this->get_most_recent_file( $snapshot_name );
+					$location = $upload_dir['basedir'] . '/checkpoint-storage/' . $this->get_most_recent_file( $snapshot_name );
 				} else {
 					WP_CLI::error( 'No checkpoint found associated with ' . $snapshot_name );
 				}
 
-				$args[ 0 ] = $location;
+				$args[0] = $location;
 
 				$db = new DB_Command;
 				$db->import( $args, null );
@@ -180,7 +179,7 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			public function get_most_recent_file( $backup_name ) {
 
 				$upload_dir = wp_upload_dir();
-				$backupsdir = scandir( $upload_dir[ 'basedir' ] . '/checkpoint-storage/', SCANDIR_SORT_DESCENDING );
+				$backupsdir = scandir( $upload_dir['basedir'] . '/checkpoint-storage/', SCANDIR_SORT_DESCENDING );
 				foreach ( $backupsdir as $backup ) {
 					if ( strpos( $backup, $backup_name ) === 0 ) {
 						return $backup;
@@ -204,7 +203,7 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			public function get_snapshot_name( $args ) {
 
 				if ( key_exists( 0, $args ) ) {
-					return $args[ 0 ];
+					return $args[0];
 				}
 
 				return sanitize_title( get_option( 'blogname', 'shruggy' ) );
@@ -234,13 +233,13 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			 */
 			public function nuke_checkpoints( $checkpoint_name ) {
 				$upload_dir = wp_upload_dir();
-				$backupsdir = scandir( $upload_dir[ 'basedir' ] . '/checkpoint-storage/', SCANDIR_SORT_DESCENDING );
+				$backupsdir = scandir( $upload_dir['basedir'] . '/checkpoint-storage/', SCANDIR_SORT_DESCENDING );
 
 				// Make sure we have a list of file before trying to process them.
-				if ( is_array( $backupsdir) ){
+				if ( is_array( $backupsdir ) ) {
 					foreach ( $backupsdir as $backup ) {
 						if ( strpos( $backup, $checkpoint_name ) === 0 ) {
-							unlink( $upload_dir[ 'basedir' ] . '/checkpoint-storage/' . $backup );
+							unlink( $upload_dir['basedir'] . '/checkpoint-storage/' . $backup );
 						}
 					}
 				}
@@ -366,8 +365,8 @@ if ( ! defined( 'WP_CLI' ) ) {
 			 * @since  0.2.0
 			 */
 			public function does_upload_folder_exist() {
-				if ( ! file_exists( $this->upload_dir[ 'basedir' ] . '/checkpoint-storage' ) ) {
-					mkdir( $this->upload_dir[ 'basedir' ] . '/checkpoint-storage' );
+				if ( ! file_exists( $this->upload_dir['basedir'] . '/checkpoint-storage' ) ) {
+					mkdir( $this->upload_dir['basedir'] . '/checkpoint-storage' );
 				}
 			}
 
@@ -383,7 +382,7 @@ if ( ! defined( 'WP_CLI' ) ) {
 			public function should_show_dbsnapback_in_admin_menu() {
 
 				// If we count more than 2 files (. , ..) then we have some backups.
-				if ( count( scandir( $this->upload_dir[ 'basedir' ] . '/checkpoint-storage' ) ) > 2 ) {
+				if ( count( scandir( $this->upload_dir['basedir'] . '/checkpoint-storage' ) ) > 2 ) {
 					return true;
 				}
 
@@ -404,9 +403,9 @@ if ( ! defined( 'WP_CLI' ) ) {
 				foreach ( $files as $file ) {
 
 					$args = array(
-						'id'     => $file[ 0 ],
-						'title'  => $file[ 0 ],
-						'href'   => '?snpackback_restore=' . $file[ 0 ] . '.' . $file[ 1 ] . '.sql',
+						'id'     => $file[0],
+						'title'  => $file[0],
+						'href'   => '?snpackback_restore=' . $file[0] . '.' . $file[1] . '.sql',
 						'parent' => 'dbsnapback',
 						'meta'   => array(
 							'class' => 'dbsnapback',
@@ -424,10 +423,10 @@ if ( ! defined( 'WP_CLI' ) ) {
 			 * @since  0.2.0
 			 */
 			public function get_snaps() {
-				$backupsdir = scandir( $this->upload_dir[ 'basedir' ] . '/checkpoint-storage/', SCANDIR_SORT_DESCENDING );
+				$backupsdir = scandir( $this->upload_dir['basedir'] . '/checkpoint-storage/', SCANDIR_SORT_DESCENDING );
 				foreach ( $backupsdir as $backup ) {
 					$file_exploded = explode( '.', $backup );
-					if ( $file_exploded[ 0 ] != '' ) {
+					if ( $file_exploded[0] != '' ) {
 						$list[] = $file_exploded;
 					}
 				}
@@ -486,8 +485,8 @@ if ( ! defined( 'WP_CLI' ) ) {
 			 * @since  0.2.0
 			 */
 			public function restore() {
-				$filename = $_GET[ 'snpackback_restore' ];
-				$command  = 'wp db import ' . $this->upload_dir[ 'basedir' ] . '/checkpoint-storage/' . $filename;
+				$filename = $_GET['snpackback_restore'];
+				$command  = 'wp db import ' . $this->upload_dir['basedir'] . '/checkpoint-storage/' . $filename;
 				exec( $command );
 			}
 
