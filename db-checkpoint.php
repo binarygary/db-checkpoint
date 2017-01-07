@@ -3,7 +3,7 @@
  * Plugin Name: DB Snapshot
  * Plugin URI:  https://www.binarygary.com/
  * Description: Extends WP-CLI to include a db snapshot for development purposes.
- * Version:     0.2.0
+ * Version:     0.2.1
  * Author:      Gary Kovar
  * Author URI:  https://www.binarygary.com/
  * Donate link: https://bethematch.org/
@@ -93,6 +93,12 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 							'optional' => true,
 							'multiple' => false,
 						),
+						array(
+							'type'     => 'flag',
+							'name'     => 'dumplog',
+							'optional' => true,
+							'default'  => false,
+						),
 					),
 					'when'      => 'after_wp_load',
 				);
@@ -141,7 +147,7 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			 *
 			 * @since  0.1.0
 			 */
-			public function checkpoint_restore( $args ) {
+			public function checkpoint_restore( $args, $assoc_args ) {
 
 				if ( ! $this->check_requirements() ) {
 					exit;
@@ -161,6 +167,16 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 
 				$db = new DB_Command;
 				$db->import( $args, null );
+
+
+				if ( key_exists( 'dumplog', $assoc_args ) && $assoc_args['dumplog'] ) {
+
+					if (file_exists(WP_CONTENT_DIR . '/debug.log' ) ){
+						unlink( WP_CONTENT_DIR . '/debug.log' );
+					}
+
+					WP_CLI::success( "debug.log removed" );
+				}
 
 				WP_CLI::success( "Checkpoint Restored!" );
 			}

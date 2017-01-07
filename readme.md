@@ -23,6 +23,9 @@ Because I haven't built it yet. I'm filling in commands as I need them, which me
 
 ## Changelog
 
+### 0.2.1 ###
+* Adds flag --dumplog which removes the debug.log file.
+
 ### 0.2.0
 
 * Added a method to install the helper plugin.

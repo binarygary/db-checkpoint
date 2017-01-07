@@ -4,11 +4,7 @@
 **Tags:               database, wp-cli
 **Requires at least:  4.4
 **Tested up to:       4.6.1
-<<<<<<< HEAD
-**Stable tag:         0.1.1
-=======
-**Stable tag:         0.2.0
->>>>>>> 0.2.0
+**Stable tag:         0.2.1
 **License:            GPLv2
 **License URI:        http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -38,6 +34,9 @@ If you need 2 different checkpoints you can name them
 wp-content/checkpoint-storage/
 
 ## Changelog ##
+
+### 0.2.1 ###
+* Adds flag --dumplog which removes the debug.log file.
 
 ### 0.2.0 ###
 * Added a method to install the helper plugin.
