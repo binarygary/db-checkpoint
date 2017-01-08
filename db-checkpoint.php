@@ -101,7 +101,7 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 						),
 						array(
 							'type'     => 'flag',
-							'name'     => 'unsafe',
+							'name'     => 'dev',
 							'optional' => true,
 							'default'  => false,
 						),
@@ -159,6 +159,11 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 					exit;
 				}
 
+				// Check if the dev flag is set to true OR site is *.dev, otherwise prompt.
+				if  ( ! $this->is_dev() || ( key_exists( 'dev', $assoc_args ) && ! $assoc_args['dev'] ) ) {
+					WP_CLI::confirm( "This is a destructive operation, are you sure?" );
+				}
+
 				$snapshot_name = $this->get_snapshot_name( $args );
 
 				$upload_dir = wp_upload_dir();
@@ -176,15 +181,41 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 
 				// If the dumplog flag is set, clear the log file.
 				if ( key_exists( 'dumplog', $assoc_args ) && $assoc_args['dumplog'] ) {
-
-					if (file_exists(WP_CONTENT_DIR . '/debug.log' ) ){
-						unlink( WP_CONTENT_DIR . '/debug.log' );
-					}
-
-					WP_CLI::success( "debug.log removed" );
+					$this->dump_log();
 				}
 
 				WP_CLI::success( "Checkpoint Restored!" );
+			}
+
+			/**
+			 * Delete the debug.log.
+			 *
+			 * @author Gary Kovar
+			 *
+			 * @since 0.2.2
+			 *
+			 * @return null
+			 */
+			public function dump_log() {
+				if (file_exists(WP_CONTENT_DIR . '/debug.log' ) ){
+					unlink( WP_CONTENT_DIR . '/debug.log' );
+				}
+
+				WP_CLI::success( "debug.log removed" );
+			}
+
+			/**
+			 * Check if this is a .dev site.
+			 *
+			 * @author Gary Kovar
+			 *
+			 * @since 0.2.2
+			 */
+			public function is_dev() {
+				if ( '.dev' === substr(get_site_url(),-4)){
+					return true;
+				}
+				return false;
 			}
 
 			/**
