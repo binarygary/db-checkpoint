@@ -99,6 +99,12 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 							'optional' => true,
 							'default'  => false,
 						),
+						array(
+							'type'     => 'flag',
+							'name'     => 'unsafe',
+							'optional' => true,
+							'default'  => false,
+						),
 					),
 					'when'      => 'after_wp_load',
 				);
@@ -168,7 +174,7 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 				$db = new DB_Command;
 				$db->import( $args, null );
 
-
+				// If the dumplog flag is set, clear the log file.
 				if ( key_exists( 'dumplog', $assoc_args ) && $assoc_args['dumplog'] ) {
 
 					if (file_exists(WP_CONTENT_DIR . '/debug.log' ) ){
