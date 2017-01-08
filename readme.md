@@ -23,6 +23,9 @@ Because I haven't built it yet. I'm filling in commands as I need them, which me
 
 ## Changelog
 
+### 0.2.2 ###
+* Adds flag --dev which prompts.
+
 ### 0.2.1 ###
 * Adds flag --dumplog which removes the debug.log file.
 
