@@ -177,6 +177,7 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 				$args[0] = $location;
 
 				$db = new DB_Command;
+				$db->reset( $args, null );
 				$db->import( $args, null );
 
 				// If the dumplog flag is set, clear the log file.
