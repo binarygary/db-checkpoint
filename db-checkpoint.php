@@ -540,6 +540,8 @@ if ( ! defined( 'WP_CLI' ) ) {
 			 */
 			public function restore() {
 				$filename = $_GET['snpackback_restore'];
+				$command  = 'wp db reset --yes';
+				exec( $command );
 				$command  = 'wp db import ' . $this->upload_dir['basedir'] . '/checkpoint-storage/' . $filename;
 				exec( $command );
 			}
